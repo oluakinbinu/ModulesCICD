@@ -1,0 +1,35 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+resources:
+  repositories:
+  - repository: self
+    type: git
+    ref: main
+
+stages:
+  - stage: Build
+    jobs:
+      - job: BuildRepo
+        displayName: 'Build Repository'
+
+        pool:
+          vmImage: 'windows-2019'
+
+        steps:
+          - checkout: self
+            clean: true
+            fetchTags: false
+
+          - task: CopyFiles@2
+            displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+            inputs:
+              TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+          - task: PublishBuildArtifacts@1
+            displayName: 'Publish Artifact: drop'
