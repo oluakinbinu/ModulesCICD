@@ -1,0 +1,55 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+resources:
+  repositories:
+  - repository: self
+    type: git
+    ref: main
+
+stages:
+  - stage: Build
+    jobs:
+      - job: BuildRepo
+        displayName: 'Build Repository'
+
+        pool:
+          vmImage: 'windows-2019'
+
+        steps:
+          - checkout: self
+            clean: true
+            fetchTags: false
+
+          - task: CopyFiles@2
+            displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+            inputs:
+              TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+          - task: PublishBuildArtifacts@1
+            displayName: 'Publish Artifact: drop'
+  - stage: Deploy
+    jobs:
+      - job: Deploy
+        displayName: 'Terraform_init'
+
+        pool:
+          vmImage: 'windows-2019'
+
+        steps:
+          - task: JasonBJohnson.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@2
+            displayName: 'Use Terraform latest'
+          - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV4@4
+            displayName: 'Terraform : Init'
+            inputs:
+              provider: aws
+              workingDirectory: '$(System.DefaultWorkingDirectory)/_FirstPipelines-CI (1)/drop'
+              backendServiceAWS: 'TF-ADO'
+              backendAWSBucketName: 'ado-user-class5-1231230120i312i31'
+              backendAWSKey: 'terraform_test.tfstate'
+
