@@ -84,7 +84,58 @@ stages:
             displayName: 'Publish Artifact: drop'
 ```
 
+Select "Save and Run"
 
+![image](https://github.com/oluakinbinu/ModulesCICD/assets/154087956/56115375-62df-40bf-8e36-2bbae9256c63)
+
+
+Select "Save and Run"
+![image](https://github.com/oluakinbinu/ModulesCICD/assets/154087956/f591ae5b-3c81-47a6-b147-e1fcccf44d84)
+
+
+Your build should be completed successfully once you observe a green checkmark accompanied by the status 'Success.'Next, click on the 'Agent Job' phrase to review and verify the log files.
+![image](https://github.com/oluakinbinu/ModulesCICD/assets/154087956/498bdb7a-3bb1-4fa4-bd2d-8d6632bf6fa6)
+
+Ensure that you verify the log and confirm that the expected artifact has been produced. Then, click on '1 artifact produced'.
+![image](https://github.com/oluakinbinu/ModulesCICD/assets/154087956/7e08f214-853b-4d4f-b7bb-d4708ed53641)
+
+Confirm the creation of all artifacts
+![image](https://github.com/oluakinbinu/ModulesCICD/assets/154087956/547e903a-3230-4f7b-9d73-9cffe59ae9c4)
+
+### How to Create Release in Azure DevOps
+Click on 'Create Release' located on the right side under 'Pipeline'.
+
+Click on 'Create New Pipeline'.
+
+Click on 'Add' in the Artifact section.
+
+In the "Add an Artifact" section, select "Build." Then choose your current project and the build source that was created earlier. Ensure that the default version is set to 'Latest' and the source alias corresponds to the build from earlier. Then click 'add.'
+
+To create a new stage, click on "Add" in the Stage section. Then, search for "Empty" and select "Empty Job." Afterward, click on "Apply.
+
+Click on the newly created stage and change its name to "Terraform Init."
+
+Now that you have an artifact and a stage created, you need to add a "Task." To do this, click on "Task" in the top left-hand corner.
+
+Now, click on "Agent Job." Ensure that the configuration of the "Agent Job" matches the one shown below.
+
+Now, click on the "+" symbol next to "Agent Job," search for "Terraform," find the "Terraform Tool Installer," and then click "Add." Ensure that the configuration matches the one provided below.
+
+Repeat the step above, but this time select "Add Terraform."
+
+Now, ensure that the Terraform settings match the configuration shown below. You are setting up the Terraform initialization step. The purpose of the 'terraform init' command is to initialize a working directory containing Terraform configuration files. This is the first command that should be run after writing a new Terraform configuration or cloning an existing one from version control
+
+Now, repeat the previous step and add a validate step, ensuring the configuration matches the one provided below. The purpose of the 'terraform validate' command is to validate the configuration files in a directory. It focuses solely on the configuration, without accessing any remote services such as remote state, provider APIs, etc.
+
+Now, repeat the previous step and add the 'Terraform Plan' step. The purpose of the 'terraform plan' command is to create an execution plan, allowing you to preview the changes that Terraform intends to make to your infrastructure. By default, when Terraform creates a plan, it reads the current state of any already existing remote objects to ensure that the Terraform state is up-to-date. Lastly, click "Save" in the top right-hand corner.
+
+Next, click on the "Terraform Init" stage and select "Make a Copy." Name the copy "Terraform Apply." Then, click on "Task" in the top right-hand corner to begin adding tasks to the new stage. We will start by creating a stage for "apply."
+
+Now, add a step and ensure that its configuration matches the one provided below. Lastly, click "Save" in the top right-hand corner.
+
+To finalize the setup, after creating the "Terraform Destroy" stage by copying the "Terraform Init" stage and renaming it, ensuring that "Manual Only" is selected for this stage, and after selecting 'Task' to create a new step for 'Terraform Destroy' that matches the specified configuration, click 'Save' to apply your changes. Lastly, to proceed, select "Create Release" in the top right-hand corner.
+
+Select the "Terraform Init" stage, then choose the appropriate artifact. After that, click on "Create."
 
 
 
